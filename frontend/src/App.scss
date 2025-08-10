@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: "Inter", sans-serif;
+  // font-optical-sizing: auto;
+
+
+}
+
+
+
+body {
+  overflow-x: hidden;
+    // font-style: normal;
+    background: url(../public/back.jpg) repeat-y left top/100%;
+    // animation: back-animation  80s linear infinite;
+    // 텍스트가 좌우로 흐르는 애니메이션
+@keyframes back-animation {
+  0% {
+    background-position: left top;
+  }
+
+  100% {
+    background-position: left bottom;
+  }
+}
+}
+
+ul,
+ol {
+  list-style-type: none;
+}
+img {
+  max-width: 100%;
+}
+#root {
+
+  a {
+    text-decoration: none;
+    color: #f0f0f0;
+  }
+
+  nav {
+
+    .in {
+      padding: 0 20px;
+      max-width: 1600px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+    }
+
+  }
+}
+
+section {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 0;
+
+
+  .in {
+    padding: 0 20px;
+    max-width:1600px;
+    margin: 0 auto;
+
+
+    h1 {
+      text-transform: uppercase;
+      font-size: 150px;
+      span {
+        display: inline-block;
+      }
+    }
+  }
+}

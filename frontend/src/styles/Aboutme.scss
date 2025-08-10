@@ -1,0 +1,123 @@
+.Aboutme {
+    background-color: #000;
+    color: #fff;
+
+
+    .in {
+        max-width: none;
+        width: 100%;
+        padding: 0 100px;
+        text-align: left;
+
+        h1 {
+            line-height: 0.8;
+            font-size: 50px;
+        }
+        .in_wrap{
+            position: relative;
+            width: 100%;
+
+        .hash_wrap{
+            // overflow: hidden;
+            white-space: nowrap;
+            width: 100%;
+            height: 50px;
+            margin-top: 20px;
+            >div{
+                position: absolute;
+                width: 100%;
+                left: 0;
+                top:0;
+                // animation: marquee 30s linear infinite alternate;
+                .info-hash{
+                    display: inline-block;
+                    margin:0 5px;
+                    padding: 0 20px;
+                    line-height: 2;
+                    border: 1px solid #fff;
+                    border-radius: 50%;
+                    font-size: 30px;
+                    cursor: pointer;
+                    transition: all .3s;
+                    position: relative;
+                    overflow: hidden;
+                    &:hover{
+                        color: #000;
+                        border: 1px solid transparent;
+                    }
+                    &::before{
+                        display: block;
+                        content:"";
+                        position: absolute;
+                        width: 0%;
+                        background-color:aquamarine;
+                        left: 0;
+                        height: 100%;
+                        transition: width .3s;
+                        z-index: -1;
+                    }
+
+                    &:hover:before{
+                        width: 100%;
+                    }
+                }
+            }
+
+        }
+
+        .marquee {
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            height: 150px;
+            width: 100%;
+
+            text-transform: capitalize;
+
+
+            // 애니메이션 설정
+            .marquee-text {
+                display: inline-block;
+                position: absolute;
+                left: 0;
+                animation: marquee 100s linear infinite;
+                will-change: transform;
+                font-size: 150px;
+                font-weight: 900;
+                letter-spacing: 5px;
+                color: #000;
+
+            }
+
+            .outline {
+                text-shadow:
+                    1px 1px 0 #fff,
+                    -1px 1px 0 #fff,
+                    1px -1px 0 #fff,
+                    -1px -1px 0 #fff,
+                    1px 0 0 #fff,
+                    -1px 0 0 #fff,
+                    0 1px 0 #fff,
+                    0 -1px 0 #fff;
+
+            }
+
+            &:hover .marquee-text {
+                animation-play-state: paused; // 마우스 호버 시 애니메이션 멈춤
+            }
+        }
+    }
+        // 텍스트가 좌우로 흐르는 애니메이션
+        @keyframes marquee {
+            0% {
+                transform: translateX(0%);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+    }
+
+}
