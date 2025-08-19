@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from "react";
-import { animateSection } from "../animations/scrollAnimations";
 import "../styles/Intro.scss"
 import gsap from "gsap";
 const Intro = () => {
