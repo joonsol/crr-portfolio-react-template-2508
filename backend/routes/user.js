@@ -107,6 +107,7 @@ router.post("/login", async (req, res) => {
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       maxAge: 24 * 60 * 60 * 1000, // 24h
+      path:"/"
     });
 
     // 8) 클라이언트에 보낼 데이터(비밀번호 제외)
@@ -122,47 +123,44 @@ router.post("/login", async (req, res) => {
 
 router.post("/logout", async (req, res) => {
   try {
-    // 1. 쿠키에서 토큰 추출
-    const token = req.cookies.token;
-
-    // 2. 토큰이 없으면 이미 로그아웃된 상태로 간주
+    const token = req.cookies?.token;
     if (!token) {
-      return res.status(400).json({ message: "이미 로그아웃된 상태입니다." });
+      // 쿠키가 없으면 이미 로그아웃 상태
+      return res.status(200).json({ message: "로그아웃되었습니다." });
     }
 
+    let decoded = null;
+
+    // 1) 만료/변조 고려: 만료는 허용하고(시간만 무시), 서명은 반드시 검증
     try {
-      // 3. 토큰 디코딩 (유효성 검증 포함)
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-      // 4. 토큰 안에 포함된 userId로 사용자 조회
-      const user = await User.findById(decoded.userId);
-
-      // 5. 사용자가 존재하면 로그인 상태 해제 후 저장
-      if (user) {
-        user.isLoggedIn = false;
-        await user.save();
-      }
-    } catch (error) {
-      // (주의) 토큰이 만료되었거나 변조된 경우
-      console.log("토큰 검증 오류:", error.message);
+      decoded = jwt.verify(token, process.env.JWT_SECRET, { ignoreExpiration: true });
+    } catch (e) {
+      // 서명 검증 실패(변조)면 DB 업데이트는 스킵, 쿠키만 제거
+      console.log("토큰 검증 실패(변조 가능):", e.message);
     }
 
-    // 6. 응답 전에 쿠키에서 토큰 제거
+    // 2) userId가 있으면 DB에서 로그인 상태 해제
+    if (decoded?.userId) {
+      await User.findByIdAndUpdate(decoded.userId, {
+        $set: { isLoggedIn: false }
+      });
+    }
+
+    // 3) 쿠키 제거 (로그인 때와 옵션 일치!!)
     res.clearCookie("token", {
       httpOnly: true,
-      secure: false,      // 프로덕션 환경에서는 true로 변경
-      sameSite: "strict"
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      path: "/",
     });
 
-    // 7. 클라이언트에 로그아웃 완료 메시지 반환
-    res.json({ message: "로그아웃되었습니다." });
-
+    return res.status(200).json({ message: "로그아웃되었습니다." });
   } catch (error) {
-    // 서버 내부 오류 처리
     console.log("로그아웃 중 서버 오류:", error);
-    res.status(500).json({ message: "서버 오류가 발생했습니다." });
+    return res.status(500).json({ message: "서버 오류가 발생했습니다." });
   }
 });
+
 
 // ================================================
 //  DELETE /delete/:userId  ── 사용자 삭제 API
